@@ -13,51 +13,80 @@
 				width: 50px;
 				height: 25px;
 			}
-			.active{
-				background-color: #00BFFF;
-			}
 		</style>
 	</head>
 	<body>
-			<div>
-				<div>
-					<div>
-						<div class="inner"></div><div class="inner"></div>
+			<div class="root">
+				<div class="root left">
+					<div class="root left">
+						<div class="inner left"></div><div class="inner right"></div>
 					</div>
-					<div>
-						<div class="inner"></div><div class="inner"></div>
-					</div>
-				</div>
-				<div>
-					<div>
-						<div class="inner"></div><div class="inner"></div>
-					</div>
-					<div>
-						<div class="inner"></div><div class="inner"></div>
+					<div class="root right">
+						<div class="inner left"></div><div class="inner right"></div>
 					</div>
 				</div>
-			</div>
-			<div>
-				<div>
-					<div>
-						<div class="inner"></div><div class="inner"></div>
+				<div class="root right">
+					<div class="root right">
+						<div class="inner left"></div><div class="inner right"></div>
 					</div>
-					<div>
-						<div class="inner"></div><div class="inner"></div>
-					</div>
-				</div>
-				<div>
-					<div>
-						<div class="inner"></div><div class="inner"></div>
-					</div>
-					<div>
-						<div class="inner"></div><div class="inner"></div>
+					<div class="root right">
+						<div class="inner left"></div><div class="inner right"></div>
 					</div>
 				</div>
 			</div>
+			<br />
+			<button id="start">前序遍历</button>
 	</body>
 	
 	<script>
+		var start = document.getElementById("start");
+		var aDivs = document.getElementsByTagName("div");
+		//遍历用的数组
+		var aNode = new Array();			
 		
+		//先序遍历的递归函数
+		function recursion(node){
+			if(node){
+				aNode.push(node);
+				recursion(node.children[0]);
+				recursion(node.children[1]);
+			}
+		}
+		
+		window.onload = function() {
+			var i = 0;
+			var timer;
+			start.onclick = function() {
+				//遍历获取数组
+				aNode = [];
+				recursion(aDivs[0]);
+				//通过全局的i判断是否有重复循环，若有则阻止上次循环并清空样式
+				if(i > 0){
+					clearTimeout(timer);
+					aNode[i-1].style.backgroundColor = "";
+					i = 0;
+				}
+				//闪烁
+				function twinkle() {
+					//把第一次变亮从计时器中提出，立即反应，提升体验
+					if(i === 0){	
+						aNode[i].style.backgroundColor = "blue";
+						i++;
+					}
+					timer = setTimeout(function(){
+						if(i > 0) {
+							aNode[i-1].style.backgroundColor = "";
+						}
+						if(i >= aNode.length) {
+							return;
+						}
+						aNode[i].style.backgroundColor = "blue";
+						i++;
+						twinkle();
+					},500);
+				}
+				twinkle();
+			}
+		}
 	</script>
 </html>
