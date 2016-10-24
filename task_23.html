@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>task23</title>
+		<style type="text/css">
+			div{
+				border: solid black 1px;
+				margin: 10px 2px;
+				padding:0 5px;
+				display: inline-block;
+				background-color: white;
+			}
+			.sub{
+				height: 65px;
+			}
+			.sub-sub{
+				height: 40px;
+			}
+			*{
+				font-family: arial;
+			}</style>
+	</head>
+	<body>
+			<div class="root">
+				<div class="sub">Breakfast
+					<div class="sub-sub">Vegetables
+						<div>cabbage</div><div>carrot</div><div>cucumber</div>
+					</div>
+					<div class="sub-sub">Soup
+						<div>tomato</div>
+					</div>
+				</div>
+				<div class="sub">Lunch
+					<div class="sub-sub">Meat
+						<div>steak</div>
+					</div>
+				</div>
+				<div class="sub">Dinner
+					<div class="sub-sub">Fruit
+						<div>apple</div><div>banana</div>
+					</div>
+				</div>
+			</div>
+			<br />
+			<button id="start">前序遍历</button><br />
+			<input type="text" id="txt" />
+			<button id="query">查询</button>
+	</body>
+	
+	<script>
+		var start = document.getElementById("start");
+		var query = document.getElementById("query");
+		var aDivs = document.getElementsByTagName("div");
+		//遍历用的数组
+		var aNode = new Array();
+		//用于存储当前遍历到的节点
+		var oAscensiveNode;
+		var i = 0;
+		var timer;
+		var otxt;
+		var flag = 0;
+		
+		//先序遍历的递归函数
+		function recursion(node){
+			if(node){
+				aNode.push(node);
+				for (let i = 0;i < node.children.length; i++) {
+					recursion(node.children[i]);
+				}
+			}
+		}
+		
+		//遍历执行动画
+		function animation() {
+				//遍历获取数组
+				aNode = [];
+				recursion(aDivs[0]);
+				//通过全局的i判断是否有重复循环，若有则阻止上次循环并清空样式
+				if(i > 0){
+					clearTimeout(timer);
+					aNode[i-1].style.backgroundColor = "white";
+					i = 0;
+				}
+				//闪烁
+				function twinkle() {
+					//把第一次变亮从计时器中提出，立即反应，提升体验
+					if(i === 0){	
+						aNode[i].style.backgroundColor = "blue";
+						if(otxt && otxt.toLowerCase() == aNode[i].childNodes[0].nodeValue.substr(0, otxt.length).toLowerCase()){
+										aNode[i].style.backgroundColor = "red";			
+										flag++;
+						}
+						i++;
+					}
+					timer = setTimeout(function(){
+						if(i > 0 && aNode[i-1].style.backgroundColor != "red") {
+							aNode[i-1].style.backgroundColor = "white";
+						}
+						if(i >= aNode.length) {
+							if(txt && flag ===0){
+								alert("There is not such info.");
+							}
+							return;
+						}
+						aNode[i].style.backgroundColor = "blue";
+						if(otxt && otxt.toLowerCase() == aNode[i].childNodes[0].nodeValue.substr(0, otxt.length).toLowerCase()){
+										aNode[i].style.backgroundColor = "red";	
+										flag++;
+						}
+						i++;
+						twinkle();
+					},300);
+				}
+				twinkle();
+			}
+		window.onload = function() {
+			start.addEventListener("click", animation);
+			query.addEventListener("click", function(){
+				otxt = document.getElementById("txt").value;
+				animation();
+				flag = 0;
+			});
+			
+		}
+	</script>
+</html>
